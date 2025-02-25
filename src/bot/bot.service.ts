@@ -4,6 +4,7 @@ import { Context } from "vm";
 import { Markup } from "telegraf";
 import { Bot } from "./models/bot.model";
 import { Saxiy } from "./models/saxiy.model";
+import axios from "axios";
 
 @Injectable()
 export class BotService {
@@ -14,24 +15,32 @@ export class BotService {
 
   async checkMembership(userId: number): Promise<boolean> {
     try {
-      const response = await fetch(
-        `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember?chat_id=@Komron_m1rzo&user_id=${userId}`
+      console.log(process.env.BOT_TOKEN);
+      console.log(userId);
+
+      const response = await axios.get(
+        `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember`,
+        {
+          params: {
+            chat_id: "@meaningful_lines",
+            user_id: userId,
+          },
+          timeout: 10000, // 10 sekund timeout qo'shdim
+        }
       );
-      const data = await response.json();
 
       return ["member", "administrator", "creator"].includes(
-        data.result.status
+        response.data.result.status
       );
     } catch (error) {
-      console.error("Xatolik yuz berdi:", error);
+      console.error("Xatolik yuz berdi:", error.message);
       return false;
     }
   }
-  //   https://t.me/meaningful_lines
+
   async start(ctx: Context) {
     try {
       const user_id = ctx.from.id;
-      console.log(user_id);
 
       const botUser = await this.botModel.findByPk(user_id);
       const isMember = await this.checkMembership(user_id);

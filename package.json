@@ -26,6 +26,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/sequelize": "^11.0.0",
+    "axios": "^1.7.9",
     "nestjs-telegraf": "^2.8.1",
     "pg": "^8.13.3",
     "reflect-metadata": "^0.2.2",
